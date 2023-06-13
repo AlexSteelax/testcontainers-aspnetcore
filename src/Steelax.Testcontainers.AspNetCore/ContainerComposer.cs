@@ -11,7 +11,7 @@ internal sealed class ContainerComposer: IContainerComposer
 
     public ContainerComposer(ContainerComposerOptions options, IServiceProvider provider)
     {
-        containers = options?.containersSpec.Select(type => (IContainerWrapper)provider.GetRequiredService(typeof(IContainerWrapper<>).MakeGenericType(type))).ToList() ?? new();
+        containers = options?.containersSpec!.Select(type => (IContainerWrapper)provider.GetRequiredService(typeof(IContainerWrapper<>).MakeGenericType(type))).ToList() ?? new();
 
         this.provider = provider;
     }
