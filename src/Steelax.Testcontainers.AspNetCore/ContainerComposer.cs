@@ -28,11 +28,19 @@ internal sealed class ContainerComposer: IContainerComposer
         await Task.WhenAll(containers.Select(c => c.Container.StartAsync(cancelationToken))).ConfigureAwait(false);
     }
 
-    public bool TryFindContainer<TConfig>(out IContainer? container)
+    public IContainer? GetContainer<TConfig>()
         where TConfig : class
     {
-        container = provider.GetService<IContainerWrapper<TConfig>>()?.Container;
+        return provider!.GetService<IContainerWrapper<TConfig>>()?.Container;
+    }
 
-        return container != null;
+    public void Stop()
+    {
+        StopAsync().GetAwaiter().GetResult();
+    }
+
+    public void Start()
+    {
+        StartAsync().GetAwaiter().GetResult();
     }
 }
