@@ -9,7 +9,7 @@ public class ContainerComposerOptions
 
     public ContainerComposerOptions ScanContainersIn(params Assembly[] assemblies)
     {
-        containersSpec = assemblies.SelectMany(assembly => assembly.GetExportedTypes()).Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(ContainerService<>).MakeGenericType(type))).ToArray();
+        containersSpec = assemblies.SelectMany(assembly => assembly.GetExportedTypes()).Where(type => type.IsClass && !type.IsAbstract && type.BaseType is not null && typeof(IContainerWrapper<>).MakeGenericType(type).IsAssignableFrom(type)).ToArray();
 
         return this;
     }
