@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Steelax.Testcontainers.AspN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{D464D31D-7E00-429B-948C-38C094D817E6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5F3E4BF1-02AC-4079-BD37-370FA9D2A3AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{170D7750-4DBD-43FD-ACF4-5828DC518287}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{104A388D-F817-46BA-A697-D403A70A948B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,11 +25,19 @@ Global
 		{7CB5DA7F-7C9C-4485-94BE-CC7D099619EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CB5DA7F-7C9C-4485-94BE-CC7D099619EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CB5DA7F-7C9C-4485-94BE-CC7D099619EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{104A388D-F817-46BA-A697-D403A70A948B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{104A388D-F817-46BA-A697-D403A70A948B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{104A388D-F817-46BA-A697-D403A70A948B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{104A388D-F817-46BA-A697-D403A70A948B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7CEDF1F-9CF1-4787-9557-ABCB753CC85D}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7CB5DA7F-7C9C-4485-94BE-CC7D099619EC} = {5F3E4BF1-02AC-4079-BD37-370FA9D2A3AC}
+		{104A388D-F817-46BA-A697-D403A70A948B} = {170D7750-4DBD-43FD-ACF4-5828DC518287}
 	EndGlobalSection
 EndGlobal
