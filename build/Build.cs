@@ -78,8 +78,10 @@ class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() =>
         {
+            var project = Solution.AllProjects.First(s => s.Name == "Steelax.Testcontainers.AspNetCore");
+            
             DotNetPack(settings => settings
-                .SetProject(Solution.GetProject("Steelax.Testcontainers.AspNetCore"))
+                .SetProject(project)
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
                 .EnableNoRestore()
@@ -122,7 +124,7 @@ class Build : NukeBuild
                 .EnableNoRestore()
                 .EnableNoBuild()
 
-                .SetVerbosity(DotNetVerbosity.Normal)
+                .SetVerbosity(DotNetVerbosity.normal)
                 //.DisableProcessAssertZeroExitCode()
                 /*.DisableProcessLogOutput()*/);
         });
