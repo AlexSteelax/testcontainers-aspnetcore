@@ -6,8 +6,9 @@ using Testcontainers.PostgreSql;
 
 namespace UnitTests.Testscontainers;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class PostgresService(
-    [FromKeyedServices(NetworkNames.Shared)] INetwork network)
+    [FromKeyedServices(NetworkNames.Shared)] INetwork network, ContainerNames containerNames)
     : IContainerService<PostgreSqlContainer>
 {
     public PostgreSqlContainer Container { get; } = new PostgreSqlBuilder().WithNetwork(network).Build();

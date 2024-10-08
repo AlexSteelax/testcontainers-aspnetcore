@@ -5,7 +5,7 @@ using Steelax.Testcontainers.AspNetCore.Defaults;
 
 namespace Steelax.Testcontainers.AspNetCore;
 
-internal sealed class ComposerProvider(ServiceProvider serviceProvider): IComposerProvider
+internal sealed class ComposeProvider(ServiceProvider serviceProvider): IComposeProvider
 {
     public IEnumerable<IContainerService<IContainer>> GetContainerServices()
     {

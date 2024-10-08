@@ -2,19 +2,19 @@ using DotNet.Testcontainers.Containers;
 
 namespace Steelax.Testcontainers.AspNetCore.Abstractions;
 
-public interface IComposerBuilder
+public interface IComposeBuilder
 {
     /// <summary>
     /// Create default composer builder
     /// </summary>
-    static IComposerBuilder Create() => new ComposerBuilder();
+    static IComposeBuilder Create() => new ComposeBuilder();
     
     /// <summary>
     /// Add single container to cluster
     /// </summary>
     /// <typeparam name="TContainer"></typeparam>
     /// <returns></returns>
-    IComposerBuilder AddContainer<TContainer>()
+    IComposeBuilder AddContainer<TContainer>()
         where TContainer : class, IContainerService<IContainer>;
     
     /// <summary>
@@ -23,7 +23,7 @@ public interface IComposerBuilder
     /// <typeparam name="TContainer"></typeparam>
     /// <typeparam name="TContainerNames"></typeparam>
     /// <returns></returns>
-    IComposerBuilder AddContainers<TContainer, TContainerNames>()
+    IComposeBuilder AddContainers<TContainer, TContainerNames>()
         where TContainer : class, IContainerService<IContainer>
         where TContainerNames : struct, Enum;
     
@@ -32,12 +32,12 @@ public interface IComposerBuilder
     /// </summary>
     /// <typeparam name="TNetworkNames"></typeparam>
     /// <returns></returns>
-    IComposerBuilder AddNetworks<TNetworkNames>()
+    IComposeBuilder AddNetworks<TNetworkNames>()
         where TNetworkNames : struct, Enum;
     
     /// <summary>
     /// Build cluster
     /// </summary>
     /// <returns></returns>
-    IComposerProvider Build();
+    IComposeProvider Build();
 }

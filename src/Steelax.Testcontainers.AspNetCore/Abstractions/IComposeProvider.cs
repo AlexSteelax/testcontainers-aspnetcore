@@ -2,8 +2,14 @@ using DotNet.Testcontainers.Containers;
 
 namespace Steelax.Testcontainers.AspNetCore.Abstractions;
 
-public interface IComposerProvider
+public interface IComposeProvider
 {
+    /// <summary>
+    /// Get all container services
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<IContainerService<IContainer>> GetContainerServices();
+    
     /// <summary>
     /// Get single container instance
     /// </summary>
