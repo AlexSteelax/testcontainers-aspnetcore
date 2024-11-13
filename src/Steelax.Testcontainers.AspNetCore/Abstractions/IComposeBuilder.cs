@@ -1,42 +1,38 @@
 using DotNet.Testcontainers.Containers;
+using Microsoft.Extensions.Logging;
 
 namespace Steelax.Testcontainers.AspNetCore.Abstractions;
 
 public interface IComposeBuilder
 {
     /// <summary>
-    /// Create default composer builder
+    /// Configure named test container
     /// </summary>
-    static IComposeBuilder Create() => new ComposeBuilder();
-    
-    /// <summary>
-    /// Add single container to cluster
-    /// </summary>
-    /// <typeparam name="TContainer"></typeparam>
+    /// <param name="key"></param>
+    /// <param name="handler"></param>
+    /// <typeparam name="TBuilderEntity"></typeparam>
+    /// <typeparam name="TContainerEntity"></typeparam>
     /// <returns></returns>
-    IComposeBuilder AddContainer<TContainer>()
-        where TContainer : class, IContainerService<IContainer>;
-    
+    IComposeBuilder ConfigureContainer<TBuilderEntity, TContainerEntity>(object key, ComposeBuilderHandler<TBuilderEntity, TContainerEntity> handler)
+        where TContainerEntity : IContainer;
+
     /// <summary>
-    /// Add several identical named containers to cluster
+    /// Configure named network
     /// </summary>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <typeparam name="TContainerNames"></typeparam>
+    /// <param name="key"></param>
+    /// <param name="handler"></param>
     /// <returns></returns>
-    IComposeBuilder AddContainers<TContainer, TContainerNames>()
-        where TContainer : class, IContainerService<IContainer>
-        where TContainerNames : struct, Enum;
-    
+    IComposeBuilder ConfigureNetwork(object key, NetworkBuilderHandler handler);
+
     /// <summary>
-    /// Add named networks to cluster
+    /// Add logger provider
     /// </summary>
-    /// <typeparam name="TNetworkNames"></typeparam>
+    /// <param name="builder"></param>
     /// <returns></returns>
-    IComposeBuilder AddNetworks<TNetworkNames>()
-        where TNetworkNames : struct, Enum;
+    IComposeBuilder AddLogger(Action<ILoggingBuilder> builder);
     
     /// <summary>
-    /// Build cluster
+    /// Compose containers
     /// </summary>
     /// <returns></returns>
     IComposeProvider Build();

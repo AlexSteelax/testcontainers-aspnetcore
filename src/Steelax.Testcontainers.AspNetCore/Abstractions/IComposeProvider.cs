@@ -1,113 +1,41 @@
 using DotNet.Testcontainers.Containers;
+using DotNet.Testcontainers.Networks;
 
 namespace Steelax.Testcontainers.AspNetCore.Abstractions;
 
 public interface IComposeProvider
 {
     /// <summary>
-    /// Get all container services
+    /// Get named typed container instance
     /// </summary>
-    /// <returns></returns>
-    IEnumerable<IContainerService<IContainer>> GetContainerServices();
-    
-    /// <summary>
-    /// Get single container instance
-    /// </summary>
+    /// <param name="key"></param>
     /// <typeparam name="TContainer"></typeparam>
     /// <returns></returns>
-    TContainer GetContainerService<TContainer>()
-        where TContainer : class, IContainerService<IContainer>;
-    
-    /// <summary>
-    /// Get named container service
-    /// </summary>
-    /// <param name="name"></param>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <returns></returns>
-    TContainer GetContainerService<TContainer>(Enum name)
-        where TContainer : class, IContainerService<IContainer>;
-    
-    /// <summary>
-    /// Get all named container services
-    /// </summary>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <typeparam name="TContainerNames"></typeparam>
-    /// <returns></returns>
-    IEnumerable<TContainer> GetContainerServices<TContainer, TContainerNames>()
-        where TContainer : class, IContainerService<IContainer>
-        where TContainerNames : struct, Enum;
-    
-    /// <summary>
-    /// Start single container instance
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <returns></returns>
-    Task StartContainerAsync<TContainer>(CancellationToken cancellationToken = default)
-        where TContainer : class, IContainerService<IContainer>;
-    
-    /// <summary>
-    /// Start named container service
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <returns></returns>
-    Task StartContainerAsync<TContainer>(Enum name, CancellationToken cancellationToken = default)
-        where TContainer : class, IContainerService<IContainer>;
-    
-    /// <summary>
-    /// Start all named container services
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <typeparam name="TContainerNames"></typeparam>
-    /// <returns></returns>
-    Task StartContainersAsync<TContainer, TContainerNames>(CancellationToken cancellationToken = default)
-        where TContainer : class, IContainerService<IContainer>
-        where TContainerNames: struct, Enum;
-    
-    /// <summary>
-    /// Stop single container instance
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <returns></returns>
-    Task StopContainerAsync<TContainer>(CancellationToken cancellationToken = default)
-        where TContainer : class, IContainerService<IContainer>;
-    
-    /// <summary>
-    /// Stop named container service
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <returns></returns>
-    Task StopContainerAsync<TContainer>(Enum name, CancellationToken cancellationToken = default)
-        where TContainer : class, IContainerService<IContainer>;
-    
-    /// <summary>
-    /// Stop all named container services
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="TContainer"></typeparam>
-    /// <typeparam name="TContainerNames"></typeparam>
-    /// <returns></returns>
-    Task StopContainersAsync<TContainer, TContainerNames>(CancellationToken cancellationToken = default)
-        where TContainer : class, IContainerService<IContainer>
-        where TContainerNames: struct, Enum;
+    TContainer GetRequiredContainer<TContainer>(object key) where TContainer : class, IContainer;
 
     /// <summary>
-    /// Start all container services
+    /// Get named abstracted container instance
     /// </summary>
-    /// <param name="cancellationToken"></param>
+    /// <param name="key"></param>
     /// <returns></returns>
-    Task StartAsync(CancellationToken cancellationToken = default);
+    IContainer GetRequiredContainer(object key);
     
     /// <summary>
-    /// Stop all container services
+    /// Get all abstracted container instances
     /// </summary>
-    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task StopAsync(CancellationToken cancellationToken = default);
+    IEnumerable<IContainer> GetContainers();
+
+    /// <summary>
+    /// Get shared network
+    /// </summary>
+    /// <returns></returns>
+    INetwork GetSharedNetwork();
+
+    /// <summary>
+    /// Get named network
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    INetwork GetRequiredNetwork(object key);
 }

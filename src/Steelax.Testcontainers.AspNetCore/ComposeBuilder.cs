@@ -1,84 +1,79 @@
-using System.Reflection;
-using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Steelax.Testcontainers.AspNetCore.Abstractions;
-using Steelax.Testcontainers.AspNetCore.Defaults;
+using Steelax.Testcontainers.AspNetCore.Common;
 
 namespace Steelax.Testcontainers.AspNetCore;
 
 internal sealed class ComposeBuilder: IComposeBuilder
 {
-    private readonly IServiceCollection _serviceCollection = new ServiceCollection();
+    private readonly ServiceCollection _serviceCollection = new();
     
-    private static INetwork CreateNetwork() =>
-        new NetworkBuilder().WithName(Guid.NewGuid().ToString("N")).WithCleanUp(true).Build();
-
-    public IComposeBuilder AddContainer<TContainer>() where TContainer : class, IContainerService<IContainer>
+    public IComposeBuilder ConfigureContainer<TBuilderEntity, TContainerEntity>(object key, ComposeBuilderHandler<TBuilderEntity, TContainerEntity> handler)
+        where TContainerEntity : IContainer
     {
-        AddContainers<TContainer, ContainerNames>();
-        return this;
-    }
-
-    public IComposeBuilder AddContainers<TContainer, TContainerNames>()
-        where TContainer : class, IContainerService<IContainer>
-        where TContainerNames : struct, Enum
-    {
-        var names = Enum.GetValues<TContainerNames>();
-
-        foreach (var name in names)
+        _serviceCollection.TryAddKeyedSingleton<IContainer>(key, (provider, _) =>
         {
-            _serviceCollection.TryAddKeyedSingleton<TContainer>(name, (provider, key) => HasKeyedServiceArg(typeof(TContainer))
-                ? ActivatorUtilities.CreateInstance<TContainer>(provider, key!)
-                : ActivatorUtilities.CreateInstance<TContainer>(provider));
-        }
+            var composeProvider = new ComposeProvider(provider);
+            var logger = provider.GetRequiredService<ILogger<TContainerEntity>>();
+
+            var containerBuilder = handler(composeProvider);
+
+            containerBuilder.WithLogger(logger);
+
+            return containerBuilder.Build();
+        });
+        
+        return this;
+    }
+
+    public IComposeBuilder ConfigureNetwork(object key, NetworkBuilderHandler handler)
+    {
+        _serviceCollection.TryAddKeyedSingleton<INetwork>(key, (_, _) =>
+        {
+            var networkBuilder = handler();
+
+            return networkBuilder.Build();
+        });
 
         return this;
     }
 
-    public IComposeBuilder AddNetworks<TNetworkNames>()
-        where TNetworkNames : struct, Enum
+    public IComposeBuilder AddLogger(Action<ILoggingBuilder> builder)
     {
-        var names = Enum.GetValues<TNetworkNames>();
-
-        foreach (var name in names)
-            _serviceCollection.TryAddKeyedSingleton<INetwork>(name, (_, key) =>
-                CreateNetwork());
+        _serviceCollection.AddLogging(builder);
 
         return this;
     }
 
     public IComposeProvider Build()
     {
-        //Add shared network
-        AddNetworks<NetworkNames>();
+        TryAddNonKeyedContainers();
+        TryAddLogger();
+
+        _serviceCollection.TryAddSingleton<SharedNetwork>();
         
-        //Add container services
+        return new ComposeProvider(_serviceCollection.BuildServiceProvider());
+    }
+
+    private void TryAddLogger()
+    {
+        var loggerDescriptor = ServiceDescriptor.Singleton<ILoggerFactory, LoggerFactory>();
+        
+        if (!_serviceCollection.Contains(loggerDescriptor))
+            _serviceCollection.AddLogging();
+    }
+
+    private void TryAddNonKeyedContainers()
+    {
         _serviceCollection
-            .Where(s => s.IsKeyedService && IsContainerService(s.ServiceType))
+            .Where(descriptor => descriptor.ServiceType == typeof(IContainer))
             .Select(s => new { s.ServiceType, s.ServiceKey })
             .ToList()
-            .ForEach(s =>
-            {
-                _serviceCollection.AddSingleton(typeof(IContainerService<IContainer>), provider =>
-                    provider.GetRequiredKeyedService(s.ServiceType, s.ServiceKey));
-            });
-
-        var serviceProvider = _serviceCollection.BuildServiceProvider();
-        var composeProvider = new ComposeProvider(serviceProvider);
-
-        return composeProvider;
-    }
-
-    private static bool IsContainerService(Type type)
-    {
-        return type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IContainerService<>));
-    }
-
-    private static bool HasKeyedServiceArg(Type type)
-    {
-        return type.GetConstructors().First().GetParameters().Any(s => s.ParameterType.IsEnum);
+            .ForEach(s => _serviceCollection
+                .AddSingleton(typeof(IContainer), provider => provider.GetRequiredKeyedService(s.ServiceType, s.ServiceKey)));
     }
 }

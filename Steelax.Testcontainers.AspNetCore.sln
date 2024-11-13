@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5F3E4BF1-02A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{170D7750-4DBD-43FD-ACF4-5828DC518287}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{104A388D-F817-46BA-A697-D403A70A948B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Steelax.Testcontainers.AspNetCore.IntegrationTests", "tests\Steelax.Testcontainers.AspNetCore.IntegrationTests\Steelax.Testcontainers.AspNetCore.IntegrationTests.csproj", "{747A8611-B06E-499C-AE26-7CF86C1770C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{7CB5DA7F-7C9C-4485-94BE-CC7D099619EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CB5DA7F-7C9C-4485-94BE-CC7D099619EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CB5DA7F-7C9C-4485-94BE-CC7D099619EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{104A388D-F817-46BA-A697-D403A70A948B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{104A388D-F817-46BA-A697-D403A70A948B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{104A388D-F817-46BA-A697-D403A70A948B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{104A388D-F817-46BA-A697-D403A70A948B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{747A8611-B06E-499C-AE26-7CF86C1770C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{747A8611-B06E-499C-AE26-7CF86C1770C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{747A8611-B06E-499C-AE26-7CF86C1770C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{747A8611-B06E-499C-AE26-7CF86C1770C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +38,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7CB5DA7F-7C9C-4485-94BE-CC7D099619EC} = {5F3E4BF1-02AC-4079-BD37-370FA9D2A3AC}
-		{104A388D-F817-46BA-A697-D403A70A948B} = {170D7750-4DBD-43FD-ACF4-5828DC518287}
+		{747A8611-B06E-499C-AE26-7CF86C1770C7} = {170D7750-4DBD-43FD-ACF4-5828DC518287}
 	EndGlobalSection
 EndGlobal
