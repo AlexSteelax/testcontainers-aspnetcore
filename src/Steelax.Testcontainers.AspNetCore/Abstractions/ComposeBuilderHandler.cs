@@ -1,6 +1,10 @@
 using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 
 namespace Steelax.Testcontainers.AspNetCore.Abstractions;
 
-public delegate IContainerBuilder<TBuilderEntity, TContainerEntity> ComposeBuilderHandler<out TBuilderEntity, out TContainerEntity>(IComposeProvider composeProvider);
+public delegate ContainerBuilder<TBuilderEntity, TContainerEntity, TConfigurationEntity> ComposeBuilderHandler<TBuilderEntity, TContainerEntity, TConfigurationEntity>(IComposeProvider composeProvider)
+    where TConfigurationEntity : IContainerConfiguration
+    where TContainerEntity : IContainer
+    where TBuilderEntity : ContainerBuilder<TBuilderEntity, TContainerEntity, TConfigurationEntity>;

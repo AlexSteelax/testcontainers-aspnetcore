@@ -1,3 +1,5 @@
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,19 +14,17 @@ internal sealed class ComposeBuilder: IComposeBuilder
 {
     private readonly ServiceCollection _serviceCollection = new();
     
-    public IComposeBuilder ConfigureContainer<TBuilderEntity, TContainerEntity>(object key, ComposeBuilderHandler<TBuilderEntity, TContainerEntity> handler)
+    public IComposeBuilder ConfigureContainer<TBuilderEntity, TContainerEntity, TConfigurationEntity>(object key, ComposeBuilderHandler<TBuilderEntity, TContainerEntity, TConfigurationEntity> handler)
         where TContainerEntity : IContainer
+        where TBuilderEntity : ContainerBuilder<TBuilderEntity, TContainerEntity, TConfigurationEntity>
+        where TConfigurationEntity : IContainerConfiguration
     {
         _serviceCollection.TryAddKeyedSingleton<IContainer>(key, (provider, _) =>
         {
             var composeProvider = new ComposeProvider(provider);
             var logger = provider.GetRequiredService<ILogger<TContainerEntity>>();
 
-            var containerBuilder = handler(composeProvider);
-
-            containerBuilder.WithLogger(logger);
-
-            return containerBuilder.Build();
+            return handler(composeProvider).WithLogger(logger).Build();
         });
         
         return this;

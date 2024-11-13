@@ -1,3 +1,5 @@
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using Microsoft.Extensions.Logging;
 
@@ -12,9 +14,12 @@ public interface IComposeBuilder
     /// <param name="handler"></param>
     /// <typeparam name="TBuilderEntity"></typeparam>
     /// <typeparam name="TContainerEntity"></typeparam>
+    /// <typeparam name="TConfigurationEntity"></typeparam>
     /// <returns></returns>
-    IComposeBuilder ConfigureContainer<TBuilderEntity, TContainerEntity>(object key, ComposeBuilderHandler<TBuilderEntity, TContainerEntity> handler)
-        where TContainerEntity : IContainer;
+    IComposeBuilder ConfigureContainer<TBuilderEntity, TContainerEntity, TConfigurationEntity>(object key, ComposeBuilderHandler<TBuilderEntity, TContainerEntity, TConfigurationEntity> handler)
+        where TContainerEntity : IContainer
+        where TBuilderEntity : ContainerBuilder<TBuilderEntity, TContainerEntity, TConfigurationEntity>
+        where TConfigurationEntity : IContainerConfiguration;
 
     /// <summary>
     /// Configure named network
