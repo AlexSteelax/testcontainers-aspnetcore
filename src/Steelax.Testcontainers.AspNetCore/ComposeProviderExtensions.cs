@@ -11,6 +11,17 @@ public static class ComposeProviderExtensions
         CancellationToken cancellationToken = default) =>
         Helper.RetryAsync(container.StartAsync, retryPolicy, cancellationToken);
     
+    public static Task StartAsync(
+        this IEnumerable<IContainer> containers,
+        ContainerRetryPolicy retryPolicy = default,
+        CancellationToken cancellationToken = default) =>
+        Task.WhenAll(containers.Select(c => c.StartAsync(retryPolicy, cancellationToken)));
+    
+    public static Task StopAsync(
+        this IEnumerable<IContainer> containers,
+        CancellationToken cancellationToken = default) =>
+        Task.WhenAll(containers.Select(c => c.StopAsync(cancellationToken)));
+    
     /// <summary>
     /// Start named container
     /// </summary>
@@ -50,7 +61,7 @@ public static class ComposeProviderExtensions
         this IComposeProvider composeProvider,
         ContainerRetryPolicy retryPolicy = default,
         CancellationToken cancellationToken = default) =>
-        Task.WhenAll(composeProvider.GetContainers().Select(s => s.StartAsync(retryPolicy, cancellationToken)));
+        composeProvider.GetContainers().StartAsync(retryPolicy, cancellationToken);
     
     /// <summary>
     /// Stop all containers
@@ -61,7 +72,7 @@ public static class ComposeProviderExtensions
     public static Task StopContainersAsync(
         this IComposeProvider composeProvider,
         CancellationToken cancellationToken = default) =>
-        Task.WhenAll(composeProvider.GetContainers().Select(s => s.StopAsync(cancellationToken)));
+        composeProvider.GetContainers().StopAsync(cancellationToken);
     
     /// <summary>
     /// Start many named containers
@@ -76,7 +87,7 @@ public static class ComposeProviderExtensions
         object[] keys,
         ContainerRetryPolicy retryPolicy = default,
         CancellationToken cancellationToken = default) =>
-        Task.WhenAll(keys.Select(k => composeProvider.GetRequiredContainer(k).StartAsync(retryPolicy, cancellationToken)));
+        keys.Select(composeProvider.GetRequiredContainer).StartAsync(retryPolicy, cancellationToken);
     
     /// <summary>
     /// Stop many named containers
@@ -89,8 +100,8 @@ public static class ComposeProviderExtensions
         this IComposeProvider composeProvider,
         object[] keys,
         CancellationToken cancellationToken = default) =>
-        Task.WhenAll(keys.Select(k => composeProvider.GetRequiredContainer(k).StopAsync(cancellationToken)));
-    
+        keys.Select(composeProvider.GetRequiredContainer).StopAsync(cancellationToken);
+
     /// <summary>
     /// Start many named containers
     /// </summary>
@@ -104,7 +115,7 @@ public static class ComposeProviderExtensions
         ContainerRetryPolicy retryPolicy = default,
         CancellationToken cancellationToken = default)
         where TKeys : struct, Enum =>
-        Task.WhenAll(Enum.GetValues<TKeys>().Select(k => composeProvider.GetRequiredContainer(k).StartAsync(retryPolicy, cancellationToken)));
+        composeProvider.StartContainerGroupAsync(Enum.GetValues<TKeys>().Cast<object>().ToArray(), retryPolicy, cancellationToken);
     
     /// <summary>
     /// Stop many named containers
@@ -117,5 +128,5 @@ public static class ComposeProviderExtensions
         this IComposeProvider composeProvider,
         CancellationToken cancellationToken = default)
         where TKeys : struct, Enum =>
-        Task.WhenAll(Enum.GetValues<TKeys>().Select(k => composeProvider.GetRequiredContainer(k).StopAsync(cancellationToken)));
+        composeProvider.StopContainerGroupAsync(Enum.GetValues<TKeys>().Cast<object>().ToArray(), cancellationToken);
 }
