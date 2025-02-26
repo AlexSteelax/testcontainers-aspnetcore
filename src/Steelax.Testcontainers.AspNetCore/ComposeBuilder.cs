@@ -49,6 +49,13 @@ internal sealed class ComposeBuilder: IComposeBuilder
         return this;
     }
 
+    public IComposeBuilder ConfigureServices(Action<IServiceCollection> serviceConfigure)
+    {
+        serviceConfigure.Invoke(_serviceCollection);
+        
+        return this;
+    }
+
     public IComposeProvider Build()
     {
         TryAddNonKeyedContainers();
